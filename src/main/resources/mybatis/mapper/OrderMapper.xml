@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hfuu.gaofei.drug.dao.impl.OrderDaoImpl">
+
+    <sql id="orders">orders</sql>
+
+    <insert id="insert" parameterType="Order" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="orders"/> (userId,drugStr,amount,address,remarks) values(#{userId},#{drugStr},#{amount},#{address},#{remarks})
+    </insert>
+
+    <select id="getListBy" parameterType="Order" resultType="Order">
+        SELECT id,userId,drugStr,amount,address,remarks,DATE_FORMAT(createtime,"%Y-%m-%d %H:%m") as createtime,
+         status FROM <include refid="orders"/> d WHERE d.status != 9
+        <if test="userId != null and userId !=''">and d.userId = #{userId}</if>
+        ORDER BY d.createtime DESC
+    </select>
+
+
+    <update id="update" parameterType="Order">
+        UPDATE <include refid="orders"/> d SET status = 1
+        <if test="remarks != null and remarks !=''">, d.remarks = #{remarks}</if>
+        <if test="status != null and status !=''">, d.status = #{status}</if>
+        WHERE d.status != 9 and d.id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hfuu.gaofei.drug.dao.impl.DrugTypeDaoImpl">
+
+    <sql id="dt">drug_type</sql>
+
+    <insert id="insert" parameterType="DrugType" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="dt"/> (name) values(#{name})
+    </insert>
+
+
+    <select id="getListBy" parameterType="java.util.HashMap" resultType="DrugType">
+        SELECT id,name,DATE_FORMAT(createtime,"%Y-%m-%d %H:%m") as createtime,status FROM <include refid="dt"/> d WHERE d.status != 9
+    </select>
+
+    <update id="update" parameterType="Drug">
+        UPDATE <include refid="dt"/> d SET status = 1
+        <if test="name != null and name !=''">,d.name = #{name}</if>
+        <if test="status != null and status !=''">and d.status = #{status}</if>
+        WHERE status != 9 and d.id = #{id}
+    </update>
+
+</mapper>

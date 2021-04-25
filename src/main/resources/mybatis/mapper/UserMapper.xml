@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hfuu.gaofei.drug.dao.impl.UserDaoImpl">
+
+    <sql id="user">user</sql>
+
+    <insert id="insert" parameterType="User" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="user"/> (account,password,type,email,address) values(#{account},#{password},#{type},#{email},#{address})
+    </insert>
+
+    <select id="getBy" parameterType="User" resultType="User">
+        SELECT id,account,password,type,email,address,status,DATE_FORMAT(createtime,"%Y-%m-%d %H:%m") as createtime FROM <include refid="user"/> s WHERE s.status != 9
+        <if test="account != null  and account !=''"> and s.account = #{account}</if>
+        <if test="password != null  and password !=''"> and s.password = #{password}</if>
+    </select>
+
+
+    <update id="update" parameterType="User">
+        UPDATE <include refid="user"/> s SET status=1
+        <if test="password != null and password !=''">,s.password = #{password}</if>
+        <if test="type != null and type !=''">,s.type = #{type}</if>
+        <if test="address != null and address !=''">,s.address = #{address}</if>
+        <if test="status != null and status !=''">,s.status = #{status}</if>
+        WHERE s.status != 9  and s.id = #{id}
+    </update>
+
+</mapper>

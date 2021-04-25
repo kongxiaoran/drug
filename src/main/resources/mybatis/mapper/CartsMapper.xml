@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hfuu.gaofei.drug.dao.impl.CartsDaoImpl">
+
+    <sql id="carts">carts</sql>
+
+    <insert id="insert" parameterType="Carts" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="carts"/> (userId,amount,drugStr) values(#{userId},#{amount},#{drugStr})
+    </insert>
+
+    <select id="getBy" parameterType="java.util.HashMap" resultType="Carts">
+        SELECT id,userId,amount,DATE_FORMAT(time,"%Y-%m-%d %H:%m") as time,drugStr,status FROM <include refid="carts"/> s WHERE s.status != 9
+        <if test="id != null  and id != ''"> and s.id = #{id}</if>
+        <if test="userId != null  and userId !='' "> and s.userId = #{userId}</if>
+    </select>
+
+    <update id="update" parameterType="Carts">
+        UPDATE <include refid="carts"/> s SET s.status = 1
+        <if test="amount != null and amount != ''">,s.amount = #{amount}</if>
+        <if test="drugStr != null and drugStr != ''">,s.drugStr=#{drugStr}</if>
+        <if test="status != null and status!=''">,s.status = #{status}</if>
+        WHERE s.status != 9  and s.id = #{id}
+    </update>
+
+    <select id="getList" resultType="Carts">
+        SELECT * FROM <include refid="carts"/> c WHERE c.status != 9
+    </select>
+
+</mapper>
